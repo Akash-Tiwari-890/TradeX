@@ -52,7 +52,7 @@ function handleInput(event) {
 
     return (
         <div className="container ">
-            <div className="row justify-content-center align-items-center text-cenetr mt-5">
+            <div className="row justify-content-center align-items-center text-center mt-5">
                <div className="text-center mt-2">
                 <h1>Welcome to zerodha</h1>
                </div>

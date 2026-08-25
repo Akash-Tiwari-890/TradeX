@@ -35,7 +35,7 @@ try {
   return (
     <div className="container mt-5">
 
-    <div  className="row justify-content-center align-items-center text-cenetr mt-5">
+    <div  className="row justify-content-center align-items-center text-center mt-5">
 
       <div className="text-center mt-3">
       <h2>Zerodha Login</h2>
