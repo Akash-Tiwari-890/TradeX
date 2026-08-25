@@ -17,7 +17,7 @@ export default function Login() {
 try {
       
       const res = await axios.post(
-          `${API_URL}/users/Login` 
+          `${API_URL}/users/Login` ,
         { email, password },
         { withCredentials: true }
       );
