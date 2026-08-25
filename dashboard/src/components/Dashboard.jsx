@@ -31,7 +31,7 @@ const Dashboard = () => {
         }
       })
       .catch(() => {
-        window.location.href = `${FROTEND_URL}/login;
+        window.location.href = `${FROTEND_URL}/login`;
       });
   }, []);
 
