@@ -13,7 +13,7 @@ import Summary from "./Summary";
 import WatchList from "./WatchList";
 import { GeneralContextProvider } from "./GeneralContext";
 const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:8010";
-const FROTEND_URL = import.meta.env.FROTEND_URL || "http://localhost:5173/login";
+const FROTEND_URL = import.meta.env.VITE_FRONTEND_URL || "http://localhost:5173";
 const Dashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
