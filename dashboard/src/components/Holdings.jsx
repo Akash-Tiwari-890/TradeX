@@ -2,7 +2,7 @@ import React from "react";
 import {useState , useEffect} from "react";
 import axios, { all } from "axios";
 import { VerticalGraph } from "./VerticalGraph";
-
+const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:8010";
 const Holdings = () => {
 
 
@@ -10,7 +10,7 @@ const Holdings = () => {
     console.log(allHoldings);
   useEffect(()=>{
 
-    axios.get("http://localhost:8010/dashboard/allHoldings" , {withCredentials:true}).then((res)=>{
+    axios.get(`${BACKEND_URL}/allHoldings` , {withCredentials:true}).then((res)=>{
        setallHoldings(res.data);
        
       

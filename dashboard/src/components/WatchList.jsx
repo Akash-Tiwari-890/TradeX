@@ -21,6 +21,7 @@ import { Chart as ChartJS, ArcElement, Tooltip as ChartTooltip, Legend } from "c
 ChartJS.register(ArcElement, ChartTooltip, Legend);
 
 
+const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:8010";
 
 const WatchList = () => {
 const [watchList , setWatchList] = useState([]);
@@ -28,7 +29,7 @@ const [watchList , setWatchList] = useState([]);
 
  useEffect(()=>{
 
-    axios.get("http://localhost:8010/dashboard/getStock" , {withCredentials:true}).then((res)=>{
+    axios.get(`${BACKEND_URL}/dashboard/getStock` , {withCredentials:true}).then((res)=>{
       console.log(res.data);
        setWatchList(res.data);
       

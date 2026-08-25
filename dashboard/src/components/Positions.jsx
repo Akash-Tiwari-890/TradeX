@@ -4,12 +4,12 @@ import axios from "axios";
 
 import { positions } from "../data/data";
 
-
+const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:8010";
 const Positions = () => {
   const[allPositions , setallPositions]= useState([]);
     useEffect(()=>{
 
-    axios.get("http://localhost:8010/dashboard/allPositions" , {withCredentials:true}).then((res)=>{
+    axios.get(`${BACKEND_URL}/dashboard/allPositions` , {withCredentials:true}).then((res)=>{
        setallPositions(res.data);
     })
 
