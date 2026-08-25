@@ -6,6 +6,9 @@ import{useState} from 'react';
 import axios from "axios";
 
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8010";
+const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || "http://localhost:5174";
+
 function Signup() {
 
     let[formData , setFormData] = useState({
@@ -29,14 +32,14 @@ function handleInput(event) {
 
       try {
         const res = await axios.post(
-            "http://localhost:8010/users/Signup", 
+             `${API_URL}/users/Signup`,
             formData, 
             { withCredentials: true } 
         );
 
         if (res.data.success) {
            
-            window.location.href = "http://localhost:5174"; 
+            window.location.href =  DASHBOARD_URL  || "http://localhost:5174"; 
         }
     } catch (err) {
         alert(err.response?.data?.message || "Signup Failed!");

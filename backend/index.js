@@ -33,7 +33,8 @@ const app = express()
 
  app.use(cors(
   {
-  origin: ["http://localhost:5173", "http://localhost:5174"], 
+  origin: ["http://localhost:5173", "http://localhost:5174", process.env.FRONTEND_URL,
+  process.env.DASHBOARD_URL], 
   credentials: true                
 }
  ));
@@ -41,7 +42,7 @@ const app = express()
 
  app.use(bodyParser.json());
  app.use(cookieParser());
-const JWT_SECRET = "super_secret_zerodha_key";
+const JWT_SECRET = process.env.JWT_SECRET || "super_secret_zerodha_key";
 
 
 

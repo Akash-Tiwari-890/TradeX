@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8010";
+const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || "http://localhost:5174";
+
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,7 +17,7 @@ export default function Login() {
 try {
       
       const res = await axios.post(
-        "http://localhost:8010/users/Login", 
+          `${API_URL}/users/Login` 
         { email, password },
         { withCredentials: true }
       );
@@ -21,7 +25,7 @@ try {
       
       if (res.data.success || res.data.sucess) {
         
-        window.location.href = "http://localhost:5174";
+        window.location.href = DASHBOARD_URL
       }
     } catch (err) {
       setErrorMsg(err.response?.data?.message || "Login Failed!");
