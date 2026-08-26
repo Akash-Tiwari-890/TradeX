@@ -5,17 +5,51 @@ const{ OrdersModel} = require('../model/OrderModel');
 const YahooFinance = require("yahoo-finance2").default;
 const yahooFinance = new YahooFinance();
 
+let cachedStocks = null;
+let lastFetchTime = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-module.exports.getStock =  async(req , res)=>{
-  const symbols = ['INFY.NS', 'TCS.NS', 'RELIANCE.NS', 'WIPRO.NS' , 'HCLTECH.NS', 'NTPC.NS'];
+const fallbackStocks = [
+  { symbol: "INFY.NS", regularMarketPrice: 1540.50, regularMarketChangePercent: 1.25 },
+  { symbol: "TCS.NS", regularMarketPrice: 3820.00, regularMarketChangePercent: -0.45 },
+  { symbol: "RELIANCE.NS", regularMarketPrice: 2950.10, regularMarketChangePercent: 0.85 },
+  { symbol: "HDFCBANK.NS", regularMarketPrice: 1460.00, regularMarketChangePercent: -1.10 },
+  { symbol: "WIPRO.NS", regularMarketPrice: 480.30, regularMarketChangePercent: 0.30 }
+];
 
+module.exports.getStock = async (req, res) => {
+  const currentTime = Date.now();
 
+  // Agar cache valid hai toh Yahoo ko call hi mat karo
+  if (cachedStocks && currentTime - lastFetchTime < CACHE_DURATION) {
+    return res.status(200).json(cachedStocks);
+  }
 
-    const quote = await yahooFinance.quote(symbols);
-  
-    res.json(quote);
+  const symbols = ["INFY.NS", "TCS.NS", "RELIANCE.NS", "HDFCBANK.NS", "WIPRO.NS"];
+
+  try {
+    const stockPromises = symbols.map((symbol) =>
+      yahooFinance.quote(symbol).catch(() => null)
+    );
+
+    const results = await Promise.all(stockPromises);
+    const validData = results.filter((item) => item !== null);
+
+    if (validData.length > 0) {
+      cachedStocks = validData.map((stock) => ({
+        symbol: stock.symbol,
+        regularMarketPrice: stock.regularMarketPrice || 0,
+        regularMarketChangePercent: stock.regularMarketChangePercent || 0,
+      }));
+      lastFetchTime = Date.now();
+      return res.status(200).json(cachedStocks);
+    }
+
+    return res.status(200).json(cachedStocks || fallbackStocks);
+  } catch (error) {
+    return res.status(200).json(cachedStocks || fallbackStocks);
+  }
 };
-
 
 module.exports.allholdings =   async (req, res) => {
 
