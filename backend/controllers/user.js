@@ -36,7 +36,7 @@ module.exports.Login = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-     res.cookie("token", token, cookieOptions);
+     res.cookie("token", token, cookieOptions)
 
     return res.status(200).json({
       success: true,
