@@ -65,7 +65,7 @@ module.exports.allholdings = async (req, res) => {
       let liveLtp = items.price || items.avg || 0;
       let dayChange = 0;
 
-      // Safe live fetch with fallback
+     
       try {
         const symbol = `${items.name.trim()}.NS`;
         const quote = await yahooFinance.quote(symbol);
@@ -74,7 +74,6 @@ module.exports.allholdings = async (req, res) => {
           dayChange = quote.regularMarketChangePercent || 0;
         }
       } catch (err) {
-        // Yahoo 429 block hone par चुपचाप DB price use karega
         console.warn(`Yahoo rate-limited for ${items.name}, using fallback price`);
       }
 
@@ -126,7 +125,7 @@ module.exports.neworder = async(req, res)=>{
         let existingHolding = await HoldingsModel.findOne({name: req.body.name});
         console.log(existingHolding);
         if(existingHolding){
-         let totalQty = existingHolding.qty + Number(req.body.qty);
+         let totalQty = Number(existingHolding.qty ) + Number(req.body.qty);
           let totalCost = (existingHolding.avg * existingHolding.qty) + (Number(req.body.price) * Number(req.body.qty));
           existingHolding.qty = totalQty;
         existingHolding.avg = totalCost / totalQty;
@@ -150,7 +149,7 @@ module.exports.neworder = async(req, res)=>{
     }
  
 
-
+  res.json({ message: "Order placed successfully" });
 
 };
 
