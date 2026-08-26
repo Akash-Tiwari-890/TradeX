@@ -9,7 +9,7 @@ const Positions = () => {
   const[allPositions , setallPositions]= useState([]);
     useEffect(()=>{
 
-    axios.get(`${BACKEND_URL}/dashboard/allPositions` , {withCredentials:true}).then((res)=>{
+    axios.get(`http://localhost:8010/dashboard/allPositions` , {withCredentials:true}).then((res)=>{
        setallPositions(res.data);
     })
 

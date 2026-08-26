@@ -10,7 +10,7 @@ const Holdings = () => {
     console.log(allHoldings);
   useEffect(()=>{
 
-    axios.get(`${BACKEND_URL}/allHoldings` , {withCredentials:true}).then((res)=>{
+    axios.get(`${BACKEND_URL}/dashboard/allHoldings` , {withCredentials:true}).then((res)=>{
        setallHoldings(res.data);
        
       

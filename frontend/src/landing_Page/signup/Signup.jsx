@@ -39,7 +39,7 @@ function handleInput(event) {
 
         if (res.data.success) {
            
-            window.location.href =  DASHBOARD_URL  || "http://localhost:5174"; 
+            window.location.href =  DASHBOARD_URL 
         }
     } catch (err) {
         alert(err.response?.data?.message || "Signup Failed!");
