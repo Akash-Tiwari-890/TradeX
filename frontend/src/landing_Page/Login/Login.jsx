@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8010"; // <--- Galat: Vite me VITE_ prefix compulsory hai;
+
+const API_URL = import.meta.env.VITE_API_URL; // <--- Galat: Vite me VITE_ prefix compulsory hai;
 const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || "http://localhost:5174";
 
 

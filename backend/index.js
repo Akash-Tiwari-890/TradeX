@@ -29,15 +29,26 @@ const session = require("express-session");
 const app = express()
 
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://tradex-1-v0ri.onrender.com",
+  "https://tradex-2-577x.onrender.com"
+];
 
-
- app.use(cors(
-  {
-  origin: ["http://localhost:5173", "http://localhost:5174", process.env.FRONTEND_URL,
-  process.env.DASHBOARD_URL], 
-  credentials: true                
-}
- ));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow if origin is in list or if request has no origin (Postman/cURL)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS error: Not allowed"));
+      }
+    },
+    credentials: true
+  })
+);
 
 
  app.use(bodyParser.json());
