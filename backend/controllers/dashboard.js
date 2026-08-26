@@ -51,61 +51,60 @@ module.exports.getStock = async (req, res) => {
   }
 };
 
-module.exports.allholdings =   async (req, res) => {
+module.exports.allholdings = async (req, res) => {
+  try {
+    const allHoldings = await HoldingsModel.find({});
 
-    let allHoldings = await HoldingsModel.find({});
-
-    let updatedHolding = [] ;
-
-
-    for(let items of allHoldings){
-      console.log(items);
-
-       // ✅ Correct Template Literal
-      const symbol = `${items.name.trim()}.NS`;
-    
-      const quote = await yahooFinance.quote(symbol);
-
-      const qty = items.qty
-      const liveLtp = quote.regularMarketPrice;
-      const buyAvg = items.avg
-      const curVal = qty * liveLtp;
-      const investment = qty * buyAvg;
-      const pnl = curVal  - investment;
-
-      const netPct =(pnl / investment)*100;
-      const day  = quote.regularMarketChangePercent;
-
-      updatedHolding.push({
-        _id :  items._id,
-
-        name : items.name,
-
-        qty : qty,
-
-        avg : items.avg,
-
-        price : liveLtp,
-        currVal : Number(curVal.toFixed(2)),
-        pnl : Number(pnl.toFixed(2)),
-        net : netPct,
-
-        day : day.toFixed(2),
-   
-        isProfit :  pnl < 0 ,
-
-        isLoss : day < 0
-
-
-
-
-      })
-      
+    if (!allHoldings || allHoldings.length === 0) {
+      return res.status(200).json([]);
     }
 
-    res.json(updatedHolding);
-  
-  
+    const updatedHolding = [];
+
+    for (let items of allHoldings) {
+      let liveLtp = items.price || items.avg || 0;
+      let dayChange = 0;
+
+      // Safe live fetch with fallback
+      try {
+        const symbol = `${items.name.trim()}.NS`;
+        const quote = await yahooFinance.quote(symbol);
+        if (quote && quote.regularMarketPrice) {
+          liveLtp = quote.regularMarketPrice;
+          dayChange = quote.regularMarketChangePercent || 0;
+        }
+      } catch (err) {
+        // Yahoo 429 block hone par चुपचाप DB price use karega
+        console.warn(`Yahoo rate-limited for ${items.name}, using fallback price`);
+      }
+
+      const qty = Number(items.qty) || 0;
+      const buyAvg = Number(items.avg) || 0;
+      const curVal = qty * liveLtp;
+      const investment = qty * buyAvg;
+      const pnl = curVal - investment;
+      const netPct = investment > 0 ? (pnl / investment) * 100 : 0;
+
+      updatedHolding.push({
+        _id: items._id,
+        name: items.name,
+        qty: qty,
+        avg: buyAvg,
+        price: liveLtp,
+        currVal: Number(curVal.toFixed(2)),
+        pnl: Number(pnl.toFixed(2)),
+        net: Number(netPct.toFixed(2)),
+        day: `${dayChange >= 0 ? "+" : ""}${Number(dayChange).toFixed(2)}%`,
+        isProfit: pnl >= 0, 
+        isLoss: dayChange < 0,
+      });
+    }
+
+    return res.status(200).json(updatedHolding);
+  } catch (error) {
+    console.error("Critical error in allholdings:", error.message);
+    return res.status(500).json({ success: false, message: "Error fetching holdings" });
+  }
 };
 
 
