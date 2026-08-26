@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-
-const API_URL = import.meta.env.API_URL;
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8010"; // <--- Galat: Vite me VITE_ prefix compulsory hai;
 const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || "http://localhost:5174";
 
 
@@ -17,7 +16,7 @@ export default function Login() {
 try {
       
       const res = await axios.post(
-          `{API_URL}/users/Login` ,
+          `${API_URL}/users/Login` ,
         { email, password },
         { withCredentials: true }
       );
